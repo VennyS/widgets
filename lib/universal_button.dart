@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum UniversalButtonState { active, highlight, skeleton }
 
@@ -56,8 +57,7 @@ class UniversalButton extends StatelessWidget {
                   Text(
                     title,
                     maxLines: 2,
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
+                    style: GoogleFonts.roboto(
                       color: state == UniversalButtonState.active
                           ? Colors.black
                           : Colors.white,
@@ -69,8 +69,7 @@ class UniversalButton extends StatelessWidget {
                   Text(
                     desc,
                     maxLines: 4,
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
+                    style: GoogleFonts.roboto(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: state == UniversalButtonState.active

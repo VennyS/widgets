@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final String? title;
@@ -134,8 +135,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   }
 
   TextStyle textStyle() {
-    return const TextStyle(
-      fontFamily: 'Roboto',
+    return GoogleFonts.roboto(
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: Colors.black,

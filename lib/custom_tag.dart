@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum CustomTagVariants { disabled, enabled }
 
@@ -84,9 +85,8 @@ class CustomTagState extends State<CustomTag> {
         Center(
           child: Text(
             widget.text,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: textColor,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               fontSize: 10,
             ),

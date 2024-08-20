@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CodeInputWidget extends StatefulWidget {
   final int codeLength;
@@ -77,9 +78,8 @@ class CodeInputWidgetState extends State<CodeInputWidget> {
               controller: controllers[index],
               focusNode: focusNodes[index],
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 20,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
               ),
               keyboardType: TextInputType.number,

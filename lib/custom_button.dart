@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum CustomButtonVariants { primary, secondary, terciary }
 
@@ -94,9 +95,8 @@ class CustomButtonWidget extends StatelessWidget {
       children.add(
         Text(
           text,
-          style: TextStyle(
+          style: GoogleFonts.inter(
             color: textColor ?? colorOfText,
-            fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
             fontSize: 16,
           ),

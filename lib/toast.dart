@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum ToastVariant { informative, success, warning, error }
 
@@ -134,8 +135,7 @@ class ToastWidgetState extends State<ToastWidget> {
                 if (widget.showTitle && widget.title != null)
                   Text(
                     widget.title!,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
+                    style: GoogleFonts.inter(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
                       height: 14 / 12,
@@ -145,8 +145,7 @@ class ToastWidgetState extends State<ToastWidget> {
                   const SizedBox(height: 4),
                 Text(
                   widget.description!,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w400,
                     fontSize: 12,
                     height: 16 / 12,
