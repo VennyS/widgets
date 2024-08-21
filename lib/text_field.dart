@@ -12,10 +12,14 @@ class TextFieldWidget extends StatefulWidget {
   final bool showPlaceHolder;
   final bool showIcon;
   final bool showUnit;
-  final Color? typingStateColor;
+  final Color typingStateColor;
+  final Color errorStateColor;
+  final Color emptyStateColor;
   final VoidCallback? onSuffixIconPressed;
   final TextInputFormatter? inputFormatter;
   final TextEditingController? controller;
+  final bool hasError;
+  final TextInputType? keyboard;
 
   const TextFieldWidget(
       {super.key,
@@ -27,31 +31,36 @@ class TextFieldWidget extends StatefulWidget {
       this.showIcon = false,
       this.unit,
       this.showUnit = false,
-      this.typingStateColor,
-      // this.obscureText = false,
+      this.hasError = false,
+      this.typingStateColor = const Color(0xFF006FFD),
+      this.emptyStateColor = const Color(0xFFC5C6CC),
+      this.errorStateColor = const Color(0xFFFFE2E5),
       this.onSuffixIconPressed,
       this.inputFormatter,
-      this.controller});
+      this.controller,
+      this.keyboard});
 
   @override
   State<TextFieldWidget> createState() =>
-      _TextFieldWidgetState(emptyPasswordFocusNode: FocusNode());
+      TextFieldWidgetState(emptyPasswordFocusNode: FocusNode());
 }
 
-class _TextFieldWidgetState extends State<TextFieldWidget> {
+class TextFieldWidgetState extends State<TextFieldWidget> {
   bool emptyShowPussword = false;
+  late bool _hasError;
 
   late FocusNode emptyPasswordFocusNode;
 
   String errorText = '';
 
-  _TextFieldWidgetState({
+  TextFieldWidgetState({
     required this.emptyPasswordFocusNode,
   });
 
   @override
   void initState() {
     super.initState();
+    _hasError = widget.hasError;
     emptyPasswordFocusNode = FocusNode();
   }
 
@@ -67,7 +76,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   }
 
   Widget _emptyTextField() {
-    final typingStateColor = widget.typingStateColor ?? const Color(0xFF006FFD);
     const emptyStateColor = Color(0xFFC5C6CC);
 
     return TextField(
@@ -81,6 +89,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         });
       },
       controller: widget.controller,
+      keyboardType: widget.keyboard,
       focusNode: emptyPasswordFocusNode,
       enabled: true, //если установить false , то будет состояние inactive
       onTap: () {
@@ -104,19 +113,21 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             : null,
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         errorText: errorText.isEmpty ? null : errorText,
-        //labelText: 'Title',                   //title
         border: OutlineInputBorder(
-          //борт для Error состояния
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-            //борт в typing состоянии
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: typingStateColor, width: 2)),
+            borderSide: BorderSide(
+                color: _hasError
+                    ? widget.errorStateColor
+                    : widget.typingStateColor,
+                width: 2)),
         enabledBorder: OutlineInputBorder(
-            //борт в empty состоянии
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: emptyStateColor, width: 1)),
+            borderSide: BorderSide(
+                color: _hasError ? widget.errorStateColor : emptyStateColor,
+                width: 1)),
         suffixIcon: widget.showIcon && widget.icon != null
             ? IconButton(
                 icon: widget.icon!,
@@ -140,5 +151,17 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       fontSize: 16,
       color: Colors.black,
     );
+  }
+
+  void enableErrorState() {
+    setState(() {
+      _hasError = true;
+    });
+  }
+
+  void disableErrorState() {
+    setState(() {
+      _hasError = false;
+    });
   }
 }
