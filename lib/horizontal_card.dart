@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:widgets/custom_tag.dart';
 
 class HorizontalCard extends StatelessWidget {
   final Widget? leadingVisuals;
   final bool showLeadingVisuals;
-  final String? title;
+  final Widget? title;
   final bool showTitle;
-  final String? subtitle;
+  final Widget? subtitle;
   final bool showSubtitle;
   final List<CustomTag>? tags;
   final bool showtags;
@@ -22,6 +21,7 @@ class HorizontalCard extends StatelessWidget {
 
   final VoidCallback? onTap;
   final List<BoxShadow>? boxShadow;
+  final Color? backgroundColor;
 
   const HorizontalCard(
       {super.key,
@@ -41,7 +41,8 @@ class HorizontalCard extends StatelessWidget {
       this.onTap,
       this.showtags = false,
       this.boxShadow,
-      this.tags});
+      this.tags,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class HorizontalCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: const Color(0xFFf0f6ff),
+            color: backgroundColor ?? const Color(0xFFf0f6ff),
             boxShadow: boxShadow),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -79,34 +80,32 @@ class HorizontalCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (showTitle && title != null)
-                    Text(
-                      title!,
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        height: 16 / 20,
-                        color: const Color(0xFF1F2024),
-                      ),
-                    ),
+                  if (showTitle && title != null) title!,
                   if (showSubtitle && subtitle != null) ...[
                     const SizedBox(
                       height: 8,
                     ),
-                    Text(
-                      subtitle!,
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          height: 12 / 14,
-                          color: const Color(0xFF71727A)),
-                    )
+                    subtitle!
                   ],
                   if (showtags && tags != null) ...[
                     const SizedBox(
                       height: 8,
                     ),
-                    // TODO:
+                    Row(
+                      children: [
+                        for (var tag in tags!)
+                          Row(
+                            children: [
+                              tag,
+                              const SizedBox(
+                                  width: 4), // Задает отступ между виджетами
+                            ],
+                          ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
                   ],
                 ],
               ),
