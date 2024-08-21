@@ -75,7 +75,7 @@ class CustomButtonWidget extends StatelessWidget {
         ),
         constraints: const BoxConstraints(minHeight: 40),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: _buildChildren(textColor),
         ),
@@ -111,6 +111,9 @@ class CustomButtonWidget extends StatelessWidget {
       children.add(rightSvg!);
     }
 
+    children.add(const SizedBox(
+      width: 4,
+    ));
     return children;
   }
 }
