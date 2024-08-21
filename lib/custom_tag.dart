@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 enum CustomTagVariants { disabled, enabled }
 
 class CustomTag extends StatefulWidget {
-  final String text;
-  final SvgPicture? leftSvg;
-  final SvgPicture? rightSvg;
+  final Widget text;
+  final Widget? leftIcon;
+  final Widget? rightIcon;
+  final Color? enabledBackgroundColor;
+  final Color? disabledBackgroundColor;
+  final Color? enabledTextColor;
+  final Color? disabledTextColor;
   final CustomTagVariants initialState;
   final bool showText;
-  final bool showLeftSvg;
-  final bool showRightSvg;
+  final bool showleftIcon;
+  final bool showrightIcon;
+  final bool isToggleEnabled;
+  final double? radius;
+
+  final double? height;
+  final double? width;
 
   const CustomTag({
     super.key,
     required this.text,
-    this.leftSvg,
-    this.rightSvg,
+    this.leftIcon,
+    this.rightIcon,
     this.initialState = CustomTagVariants.disabled,
     this.showText = true,
-    this.showLeftSvg = false,
-    this.showRightSvg = false,
+    this.showleftIcon = false,
+    this.showrightIcon = false,
+    this.enabledBackgroundColor,
+    this.disabledBackgroundColor,
+    this.enabledTextColor,
+    this.disabledTextColor,
+    this.isToggleEnabled = true,
+    this.radius,
+    this.height,
+    this.width, // По умолчанию toggle включен
   });
 
   @override
@@ -38,29 +53,37 @@ class CustomTagState extends State<CustomTag> {
   }
 
   void _toggleState() {
-    setState(() {
-      _state = _state == CustomTagVariants.disabled
-          ? CustomTagVariants.enabled
-          : CustomTagVariants.disabled;
-    });
+    if (widget.isToggleEnabled) {
+      // Проверка, включен ли toggle
+      setState(() {
+        _state = _state == CustomTagVariants.disabled
+            ? CustomTagVariants.enabled
+            : CustomTagVariants.disabled;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = _state == CustomTagVariants.disabled
-        ? const Color(0xFFEAF2FF)
-        : Theme.of(context).primaryColor;
+        ? (widget.disabledBackgroundColor ??
+            Colors.grey.shade300) // Дефолтный цвет для disabled
+        : (widget.enabledBackgroundColor ??
+            Colors.blue.shade300); // Дефолтный цвет для enabled
+
     final Color textColor = _state == CustomTagVariants.disabled
-        ? Theme.of(context).primaryColor
-        : Colors.white;
+        ? (widget.disabledTextColor ??
+            Colors.black54) // Дефолтный цвет для текста в disabled
+        : (widget.enabledTextColor ??
+            Colors.white); // Дефолтный цвет для текста в enabled
 
     return GestureDetector(
       onTap: _toggleState,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(widget.radius ?? 14),
         ),
         constraints: const BoxConstraints(minHeight: 24),
         child: Row(
@@ -75,31 +98,19 @@ class CustomTagState extends State<CustomTag> {
   List<Widget> _buildChildren(Color textColor) {
     final List<Widget> children = [];
 
-    if (widget.showLeftSvg && widget.leftSvg != null) {
-      children.add(widget.leftSvg!);
-      children.add(const SizedBox(width: 8));
+    if (widget.showleftIcon && widget.leftIcon != null) {
+      children.add(widget.leftIcon!);
+      children.add(const SizedBox(width: 4));
     }
 
     if (widget.showText) {
       children.add(
-        Center(
-          child: Text(
-            widget.text,
-            style: GoogleFonts.inter(
-              color: textColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
-            ),
-          ),
-        ),
+        Center(child: widget.text),
       );
     }
 
-    if (widget.showRightSvg && widget.rightSvg != null) {
-      if (widget.showText) {
-        children.add(const SizedBox(width: 8));
-      }
-      children.add(widget.rightSvg!);
+    if (widget.showrightIcon && widget.rightIcon != null) {
+      children.add(widget.rightIcon!);
     }
 
     return children;
