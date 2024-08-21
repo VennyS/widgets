@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 enum ToastVariant { informative, success, warning, error }
 
+enum ToastSide { bottom, top }
+
 Map<ToastVariant, Color> toastColors = {
   ToastVariant.informative: const Color(0xFFEAF2FF),
   ToastVariant.success: const Color(0xFFE7F4E8),
@@ -33,14 +35,23 @@ class ToastManager {
 
   OverlayEntry? _overlayEntry;
 
-  void showToast(BuildContext context, ToastWidget toast) {
+  void showToast(BuildContext context, ToastWidget toast, ToastSide side,
+      {double left = 32,
+      double rigth = 32,
+      double top = 16,
+      double bottom = 16}) {
     _overlayEntry?.remove();
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: MediaQuery.of(context).padding.top + 16,
-        left: 32,
-        right: 32,
+        top: side == ToastSide.top
+            ? MediaQuery.of(context).padding.top + top
+            : null, // Если тост должен быть снизу, top должно быть null
+        left: left,
+        right: rigth,
+        bottom: side == ToastSide.bottom
+            ? MediaQuery.of(context).padding.bottom + bottom
+            : null, // Если тост должен быть сверху, bottom должно быть null
         child: Material(
           color: Colors.transparent,
           child: toast,
@@ -68,6 +79,9 @@ class ToastWidget extends StatefulWidget {
   final Map<ToastVariant, SvgPicture>? icons;
   final Duration duration;
 
+  final double? width;
+  final double? height;
+
   const ToastWidget({
     super.key,
     required this.variant,
@@ -79,6 +93,8 @@ class ToastWidget extends StatefulWidget {
     this.duration = const Duration(seconds: 3),
     this.showTitle = true,
     this.showDescription = true,
+    this.width,
+    this.height,
   });
 
   @override
@@ -129,7 +145,7 @@ class ToastWidgetState extends State<ToastWidget> {
           const SizedBox(width: 16),
           Expanded(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.showTitle && widget.title != null)
@@ -141,18 +157,19 @@ class ToastWidgetState extends State<ToastWidget> {
                       height: 14 / 12,
                     ),
                   ),
-                if (widget.showDescription && widget.description != null)
+                if (widget.showDescription && widget.description != null) ...[
                   const SizedBox(height: 4),
-                Text(
-                  widget.description!,
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                    height: 16 / 12,
+                  Text(
+                    widget.description!,
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      height: 16 / 12,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ]
               ],
             ),
           ),
