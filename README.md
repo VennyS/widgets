@@ -1,14 +1,17 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## Набор виджетов для flutter.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+### Обзор
+1. code_form.dart
+![image](https://github.com/user-attachments/assets/4dc80316-fbeb-46e5-8fa7-22886626d482)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+2. custom_button.dart и text_field.dart
+![image](https://github.com/user-attachments/assets/8b48a723-7996-44bc-89dc-d55e450127a4)
 
-Набор виджетов для flutter.
+3. custom_tag.dart (внутри horizontal_card.dart)
+![image](https://github.com/user-attachments/assets/6909ae06-a409-4fcd-a96e-f447279a2c5f)
+
+4. toast.dart
+![image](https://github.com/user-attachments/assets/46d52553-215e-42f4-b1d9-e2af15fe6d0a)
+
+5. universal_button.dart
+![image](https://github.com/user-attachments/assets/7db3bc43-a8b9-4f33-8f44-5fc29a3691ed)
