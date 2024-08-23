@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:widgets/models/list_item.dart';
 
-class Api {
-  static final Api _instance = Api._internal();
+class ApiService {
+  static final ApiService _instance = ApiService._internal();
   late String baseUrl;
 
-  factory Api() {
+  factory ApiService() {
     return _instance;
   }
 
-  Api._internal();
+  ApiService._internal();
 
   Future<void> setBaseUrl(String url) async {
     baseUrl = url;
