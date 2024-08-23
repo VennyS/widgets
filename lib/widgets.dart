@@ -6,3 +6,7 @@ export 'toast.dart';
 export 'universal_button.dart';
 export 'horizontal_card.dart';
 export 'filter_button.dart';
+export 'api/api_service.dart';
+export 'api/config.dart';
+export 'models/list_item.dart';
+export 'models/spots.dart';
