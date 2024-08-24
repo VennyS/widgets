@@ -10,3 +10,4 @@ export 'api/api_service.dart';
 export 'api/config.dart';
 export 'models/list_item.dart';
 export 'models/spots.dart';
+export 'logger/app_logger.dart';
