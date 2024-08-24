@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:widgets/models/list_item.dart';
+import 'package:logger/logger.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -12,7 +13,7 @@ class ApiService {
 
   ApiService._internal();
 
-  Future<void> setBaseUrl(String url) async {
+  void setBaseUrl(String url) {
     baseUrl = url;
   }
 
@@ -27,32 +28,44 @@ class ApiService {
       body: json.encode(data), // Преобразуем карту данных в JSON-строку
     );
 
-    // Возвращаем и тело ответа, и код статуса
-    return {
-      'statusCode': response.statusCode,
-      'body': response.statusCode == 200 || response.statusCode == 201
-          ? json.decode(response.body)
-          : null
-    };
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return {
+        'statusCode': response.statusCode,
+        'body':
+            utf8.decode(response.bodyBytes), // Декодируем bodyBytes как UTF-8
+      };
+    } else {
+      return {
+        'statusCode': response.statusCode,
+        'body': 'Error: ${response.statusCode}'
+      };
+    }
   }
 
-  Future<String> singUpOrCancelRecord(String name, String phone, int gtoID,
-      String status, String? userID) async {
+  Future<String?> signUp(
+      String name, String phone, int gtoID, String status) async {
     final url = '$baseUrl/test/user_records/';
-
-    // Данные, которые отправляем в POST-запросе
     final data = {
       'name': name,
       'phone': phone,
-      'gto_id': gtoID.toString(),
-      'status': status,
-      'user_id': userID,
+      'group_training_object_id': gtoID,
+      'status': "Tururu777",
     };
 
-    // Отправляем POST-запрос с данными
     final response = await _postRequest(url, data);
+    final body = response['body'];
 
-    return response['body'];
+    Logger().i("url: $url");
+    Logger().i("данные с запросом: $data");
+
+    // Если body - это строка и не содержит ошибки, вернем её
+    if (body is String && !body.contains("Error")) {
+      Logger().i("ответ: $response");
+      return body; // Уже декодировано в _postRequest
+    } else {
+      Logger().e("ответ: $response");
+      return null;
+    }
   }
 
   Future<List<ListItem>> fetchListItems(int weekNumber) async {
