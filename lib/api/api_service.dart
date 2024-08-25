@@ -104,17 +104,18 @@ class ApiService {
 
   Future<String> _processPhone(String phone) async {
     final url = '$baseUrl/auth/auth_phone/?phone=$phone';
-    final responseBody = await _postRequest(url, null);
+    final response = await _postRequest(url, null);
+    final body = response['body'];
 
     AppLogger.i("url: $url");
-    AppLogger.i("body: $responseBody");
+    AppLogger.i("body: $body");
     // Проверка наличия ключей и возврат соответствующего значения
-    if (responseBody.containsKey('message')) {
-      return responseBody['message'] as String;
-    } else if (responseBody.containsKey('detail')) {
-      return responseBody['detail'] as String;
+    if (body.containsKey('message')) {
+      return body['message'] as String;
+    } else if (body.containsKey('detail')) {
+      return body['detail'] as String;
     } else {
-      AppLogger.e("body: $responseBody");
+      AppLogger.e("body: $body");
       return 'Unknown response format';
     }
   }
@@ -125,17 +126,18 @@ class ApiService {
 
   Future<String> _proccesCode(String phone, String code) async {
     final url = '$baseUrl/auth/code/?phone=$phone&&code=$code';
-    final responseBody = await _postRequest(url, null);
+    final response = await _postRequest(url, null);
+    final body = response['body'];
 
     AppLogger.i("url: $url");
-    AppLogger.i("body: $responseBody");
-    if (responseBody.containsKey("message")) {
-      return responseBody[
+    AppLogger.i("body: $body");
+    if (body.containsKey("message")) {
+      return body[
           "message"]; // Код недействителен или времы вышло, обновленный код отправлен в телеграм
-    } else if (responseBody.containsKey("role")) {
+    } else if (body.containsKey("role")) {
       return "Успешно";
     } else {
-      AppLogger.e("body: $responseBody");
+      AppLogger.e("body: $body");
       return "null";
     }
   }
