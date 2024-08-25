@@ -1,35 +1,30 @@
 import 'package:logger/logger.dart';
 
 class AppLogger {
-  // Единственный экземпляр логгера
-  static final AppLogger _instance = AppLogger._internal();
-
-  // Экземпляр Logger из пакета `logger`
-  late final Logger _logger;
-
-  // Приватный конструктор
   AppLogger._internal() {
     _logger = Logger(
       printer: PrettyPrinter(
-        methodCount: 2, // Количество строк для отображения трассировки стека
-        errorMethodCount:
-            8, // Количество строк для отображения трассировки стека при ошибках
-        lineLength: 120, // Максимальная длина строки
-        colors: true, // Включить цветной вывод
-        printEmojis: true, // Включить эмодзи
+        methodCount: 2,
+        errorMethodCount: 8,
+        lineLength: 120,
+        colors: true,
+        printEmojis: true,
       ),
     );
   }
 
-  // Фабричный конструктор для получения единственного экземпляра
+  static final AppLogger _instance = AppLogger._internal();
+  static AppLogger get instance => _instance;
+
+  late final Logger _logger;
+
   factory AppLogger() {
     return _instance;
   }
 
-  // Обёртки для методов Logger
-  void d(String message) => _logger.d(message);
-  void i(String message) => _logger.i(message);
-  void w(String message) => _logger.w(message);
-  void e(String message) => _logger.e(message);
-  void t(String message) => _logger.t(message);
+  static void d(String message) => instance._logger.d(message);
+  static void i(String message) => instance._logger.i(message);
+  static void w(String message) => instance._logger.w(message);
+  static void e(String message) => instance._logger.e(message);
+  static void t(String message) => instance._logger.t(message);
 }

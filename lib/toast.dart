@@ -25,19 +25,29 @@ SvgPicture svg(String asset) {
 }
 
 class ToastManager {
+  ToastManager._internal();
+
   static final ToastManager _instance = ToastManager._internal();
+  static ToastManager get instance => _instance;
+
+  OverlayEntry? _overlayEntry;
 
   factory ToastManager() {
     return _instance;
   }
 
-  ToastManager._internal();
-
-  OverlayEntry? _overlayEntry;
-
-  void showToast(BuildContext context, ToastWidget toast, ToastSide side,
+  static void showToast(BuildContext context, ToastWidget toast, ToastSide side,
       {double left = 32,
-      double rigth = 32,
+      double right = 32,
+      double top = 16,
+      double bottom = 16}) {
+    instance._showToast(context, toast, side,
+        left: left, right: right, top: top, bottom: bottom);
+  }
+
+  void _showToast(BuildContext context, ToastWidget toast, ToastSide side,
+      {double left = 32,
+      double right = 32,
       double top = 16,
       double bottom = 16}) {
     _overlayEntry?.remove();
@@ -46,12 +56,12 @@ class ToastManager {
       builder: (context) => Positioned(
         top: side == ToastSide.top
             ? MediaQuery.of(context).padding.top + top
-            : null, // Если тост должен быть снизу, top должно быть null
+            : null,
         left: left,
-        right: rigth,
+        right: right,
         bottom: side == ToastSide.bottom
             ? MediaQuery.of(context).padding.bottom + bottom
-            : null, // Если тост должен быть сверху, bottom должно быть null
+            : null,
         child: Material(
           color: Colors.transparent,
           child: toast,
@@ -62,7 +72,9 @@ class ToastManager {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
-  void hideToast() {
+  static void hideToast() => instance._hideToast();
+
+  void _hideToast() {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
@@ -120,7 +132,7 @@ class ToastWidgetState extends State<ToastWidget> {
         if (widget.onTapClose != null) {
           widget.onTapClose!();
         }
-        ToastManager().hideToast();
+        ToastManager.hideToast();
       }
     });
   }
@@ -183,7 +195,7 @@ class ToastWidgetState extends State<ToastWidget> {
               } else {
                 widget.onTapClose?.call();
               }
-              ToastManager().hideToast();
+              ToastManager.hideToast();
             },
             child: SvgPicture.asset("assets/svgs/close.svg"),
           ),
