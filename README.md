@@ -19,6 +19,5 @@
 6. filter_button.dart<br>
 ![image](https://github.com/user-attachments/assets/888f83ad-a13d-4f3d-bf23-a4757151be4b)
 
-7. schedule_element.dart<br>
-![image](https://github.com/user-attachments/assets/f854f62b-1b3d-4665-a1c9-25afb3083b68)
-
+7. calendar.dart и week_list.dart<br> и schedule_element.dart<br>
+![image](https://github.com/user-attachments/assets/8ad480d4-6e44-4464-91a3-092bd2580765)
