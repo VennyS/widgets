@@ -106,12 +106,15 @@ class ApiService {
     final url = '$baseUrl/auth/auth_phone/?phone=$phone';
     final responseBody = await _postRequest(url, null);
 
+    AppLogger.i("url: $url");
+    AppLogger.i("body: $responseBody");
     // Проверка наличия ключей и возврат соответствующего значения
     if (responseBody.containsKey('message')) {
       return responseBody['message'] as String;
     } else if (responseBody.containsKey('detail')) {
       return responseBody['detail'] as String;
     } else {
+      AppLogger.e("body: $responseBody");
       return 'Unknown response format';
     }
   }
@@ -124,12 +127,15 @@ class ApiService {
     final url = '$baseUrl/auth/code/?phone=$phone&&code=$code';
     final responseBody = await _postRequest(url, null);
 
+    AppLogger.i("url: $url");
+    AppLogger.i("body: $responseBody");
     if (responseBody.containsKey("message")) {
       return responseBody[
           "message"]; // Код недействителен или времы вышло, обновленный код отправлен в телеграм
     } else if (responseBody.containsKey("role")) {
       return "Успешно";
     } else {
+      AppLogger.e("body: $responseBody");
       return "null";
     }
   }
