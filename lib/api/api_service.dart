@@ -62,14 +62,13 @@ class ApiService {
         'name': name,
         'phone': phone,
         'group_training_object_id': gtoID,
-        'status': "Tururu777",
+        'status': "Tururu777"
       };
 
       final response = await _postRequest(url, data);
       final body = response['body'];
 
-      AppLogger.i("url: $url");
-      AppLogger.i("данные с запросом: $data");
+      AppLogger.i("url: $url\nданные с запросом: $data");
 
       if (body is String && !body.contains("Error")) {
         AppLogger.i("ответ: $response");
