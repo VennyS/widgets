@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:widgets/logger/app_logger.dart';
 import 'package:widgets/models/list_item.dart';
-import 'package:logger/logger.dart';
-
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 
 class ApiService {
   ApiService._internal();
@@ -17,13 +13,13 @@ class ApiService {
   late String baseUrl;
 
   Future<Map<String, dynamic>> _postRequest(
-      String url, Map<String, dynamic> data) async {
+      String url, Map<String, dynamic>? data) async {
     final response = await http.post(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: json.encode(data),
+      body: data != null ? json.encode(data) : null,
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -63,14 +59,14 @@ class ApiService {
     final response = await _postRequest(url, data);
     final body = response['body'];
 
-    Logger().i("url: $url");
-    Logger().i("данные с запросом: $data");
+    AppLogger.i("url: $url");
+    AppLogger.i("данные с запросом: $data");
 
     if (body is String && !body.contains("Error")) {
-      Logger().i("ответ: $response");
+      AppLogger.i("ответ: $response");
       return body;
     } else {
-      Logger().e("ответ: $response");
+      AppLogger.e("ответ: $response");
       return null;
     }
   }
@@ -99,6 +95,42 @@ class ApiService {
       return items;
     } else {
       throw Exception('Failed to load list items');
+    }
+  }
+
+  static Future<String> processPhone(String phone) {
+    return instance._processPhone(phone);
+  }
+
+  Future<String> _processPhone(String phone) async {
+    final url = '$baseUrl/auth/auth_phone/?phone=$phone';
+    final responseBody = await _postRequest(url, null);
+
+    // Проверка наличия ключей и возврат соответствующего значения
+    if (responseBody.containsKey('message')) {
+      return responseBody['message'] as String;
+    } else if (responseBody.containsKey('detail')) {
+      return responseBody['detail'] as String;
+    } else {
+      return 'Unknown response format';
+    }
+  }
+
+  static Future<String> proccesCode(String phone, String code) {
+    return instance._proccesCode(phone, code);
+  }
+
+  Future<String> _proccesCode(String phone, String code) async {
+    final url = '$baseUrl/auth/code/?phone=$phone&&code=$code';
+    final responseBody = await _postRequest(url, null);
+
+    if (responseBody.containsKey("message")) {
+      return responseBody[
+          "message"]; // Код недействителен или времы вышло, обновленный код отправлен в телеграм
+    } else if (responseBody.containsKey("role")) {
+      return "Успешно";
+    } else {
+      return "null";
     }
   }
 }
