@@ -29,12 +29,14 @@ class WeekList extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              context.read<ScheduleCubit>().updateSelectedDay(dateTime);
+              !_isDateBefore(dateTime, DateTime.now())
+                  ? context.read<ScheduleCubit>().updateSelectedDay(dateTime)
+                  : null;
             },
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: _determineColor(dateTime, selectedDay),
+                color: _determineBackgroundColor(dateTime, selectedDay),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               child: Column(
@@ -56,13 +58,9 @@ class WeekList extends StatelessWidget {
                   Text(
                     day.toString(),
                     style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      color: _isDatesEqual(dateTime, selectedDay) &&
-                              _isDatesEqual(dateTime, DateTime.now())
-                          ? const Color(0xFFA03FFF)
-                          : Colors.black,
-                    ),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: _determineDayColor(dateTime, selectedDay)),
                   ),
                 ],
               ),
@@ -91,7 +89,12 @@ class WeekList extends StatelessWidget {
         first.year == second.year;
   }
 
-  Color _determineColor(DateTime date, DateTime selectedDay) {
+  bool _isDateBefore(DateTime first, DateTime second) {
+    return DateTime(first.year, first.month, first.day)
+        .isBefore(DateTime(second.year, second.month, second.day));
+  }
+
+  Color _determineBackgroundColor(DateTime date, DateTime selectedDay) {
     if (_isDatesEqual(date, selectedDay) &&
         _isDatesEqual(date, DateTime.now())) {
       return Colors.white;
@@ -103,6 +106,19 @@ class WeekList extends StatelessWidget {
       return const Color(0xFFA03FFF);
     } else {
       return Colors.transparent;
+    }
+  }
+
+  Color _determineDayColor(DateTime date, DateTime selectedDay) {
+    if (_isDateBefore(date, DateTime.now())) {
+      return const Color(0xFF71727A);
+    } else if (_isDatesEqual(date, selectedDay) &&
+        _isDatesEqual(date, DateTime.now())) {
+      return const Color(0xFFA03FFF);
+    } else if (_isDatesEqual(date, DateTime.now())) {
+      return Colors.white;
+    } else {
+      return const Color(0xFF494A50);
     }
   }
 }
